@@ -1,0 +1,38 @@
+[
+ {
+  "n": "01",
+  "title": "Choose your piece",
+  "desc": "Pick a personalized gold bracelet or ring.",
+  "html": "<div class=\"pair\"><div><div class=\"mi\"><img src=\"/images/bracelet.jpg\" alt=\"\" loading=\"lazy\" width=\"400\" height=\"400\"></div><span class=\"tg2\">Bracelet</span></div><div><div class=\"mi\"><img src=\"/images/ring.jpg\" alt=\"\" loading=\"lazy\" width=\"400\" height=\"400\"></div><span class=\"tg2\">Ring</span></div></div>"
+ },
+ {
+  "n": "02",
+  "title": "Select your gold",
+  "desc": "Choose 22K or 24K. 24K is offered only where the design can take it.",
+  "html": "<div class=\"bars\"><div><b>22K</b><small>91.6% pure gold</small><div class=\"bar\"><i style=\"width:91.6%\"></i></div></div><div><b>24K</b><small>99.9% pure gold, where the design suits</small><div class=\"bar\"><i style=\"width:99.9%\"></i></div></div></div>"
+ },
+ {
+  "n": "03",
+  "title": "Make it yours",
+  "desc": "Type a name or initials, pick a lettering style, or upload your own logo.",
+  "html": "<div class=\"mock\"><div class=\"fld\"><span class=\"typ\">Aarav</span></div><div class=\"chips\"><span>Classic</span><span style=\"font-family:'Great Vibes',cursive;font-size:1rem\">Script</span><span>MODERN</span></div><div class=\"drop\">&#8593; Upload logo &middot; PNG &middot; JPG &middot; SVG</div></div>"
+ },
+ {
+  "n": "04",
+  "title": "See it live",
+  "desc": "Your name or artwork appears on the piece instantly, with zoom and a 360&deg; view.",
+  "html": "<div class=\"mi big\"><img src=\"/images/bracelet.jpg\" alt=\"\" loading=\"lazy\" width=\"400\" height=\"400\"></div><span class=\"bdg\">Live preview</span><div class=\"chips tl\"><span>+</span><span>&minus;</span><span>360&deg;</span></div>"
+ },
+ {
+  "n": "05",
+  "title": "Confirm the details",
+  "desc": "Review the design, estimated weight and price. Final amounts are confirmed before production.",
+  "html": "<div class=\"mock sum\"><p><span>Piece</span><b>Bracelet</b></p><p><span>Purity</span><b>22K</b></p><p><span>Name</span><b>Aarav</b></p><p><span>Est. weight</span><b>Shown before you pay</b></p><p><span>Price</span><b>Estimate, confirmed before production</b></p><label class=\"cf\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"6\" fill=\"#fff\" stroke=\"#3f6fb0\" stroke-width=\"2\"/><path class=\"ck\" d=\"M7 12l4 4 6-8\" fill=\"none\" stroke=\"#3f6fb0\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-dasharray=\"20\"/></svg> I confirm this design</label></div>"
+ },
+ {
+  "n": "06",
+  "title": "Pay securely",
+  "desc": "Pay by UPI or another supported method. Your order is confirmed only after the payment is verified.",
+  "html": "<div class=\"mock pay\"><div class=\"chips\"><span>UPI</span><span>Cards</span><span>Net banking</span></div><svg viewBox=\"0 0 21 21\" width=\"96\" height=\"96\" style=\"justify-self:center\"><path fill=\"#2f5f9e\" fill-rule=\"evenodd\" d=\"M0 0h7v7H0zM1 1h5v5H1zM2 2h3v3H2zM14 0h7v7h-7zM15 1h5v5h-5zM16 2h3v3h-3zM0 14h7v7H0zM1 15h5v5H1zM2 16h3v3H2zM9 1h2v2H9zM12 4h2v2h-2zM9 8h3v2H9zM14 9h2v3h-2zM17 9h2v2h-2zM9 13h2v3H9zM12 16h3v2h-3zM17 15h2v4h-2zM19 12h2v2h-2z\"/></svg><small style=\"text-align:center;opacity:.75\">Illustrative. Secure checkout through the payment gateway.</small></div>"
+ }
+]

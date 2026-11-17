@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+
+# Visual Studio temporary files
+.vs/
+.vscode/
+
+# Build files
+dist/
+build/
+coverage/
+
+# Database files (if they contain customer data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log

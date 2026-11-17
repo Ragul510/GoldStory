@@ -1,0 +1,1 @@
+{"//":"Only used by the test runner (tsx) so JSX works the same way as in Vite.","compilerOptions":{"jsx":"react-jsx","allowJs":true,"module":"esnext","moduleResolution":"bundler","resolveJsonModule":true}}
