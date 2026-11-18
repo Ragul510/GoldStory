@@ -26,6 +26,7 @@ export function createApp() {
   app.use(express.json({ limit: '100kb' }));
   app.use(cookieParser());
   app.use(originGuard((process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:4000').split(',').map((s) => s.trim())));
+            'https://gold-story.vercel.app,http://localhost:5173'
   app.use('/api', limiter(15 * 60 * 1000, 600));
 
   // Product images and videos (public, cached for a long time because file names are random)
