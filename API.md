@@ -10,7 +10,7 @@ All bodies are JSON unless marked *multipart*. Errors look like `{ "error": "mes
 | GET | `/api/products` | | Live (`fulfilled`) and "coming soon" (`unfulfilled`) products. Drafts (`pending`) are hidden. |
 | GET | `/api/products/:slug` | | One product, or 404 |
 | GET | `/api/rates/public` | | `{ ready, updatedAt }` (are gold rates set?) |
-| POST | `/api/quote` | `{ slug, purity: "22K"\|"24K", engraving?: true }` | Itemized estimate: `weight, rate, gold, making, personalization, tax, shipping, total`. 409 if rates not set or purity not offered. |
+| POST | `/api/quote` | `{ slug, purity: "22K"\|"24K", engraving?: true }` | Itemized estimate: `weight, rate, gold, making, tax, shipping, total`. 409 if rates not set or purity not offered. |
 | POST | `/api/artwork` | *multipart* `file` (PNG/JPG/WebP, max 2 MB) | `{ file }` (private; only the admin can download it) |
 | POST | `/api/orders` | `{ slug, purity, text?, font?, artworkFile?, customer: { name, mobile, email?, address } }` | `201 { id, status, paymentStatus: "unpaid", pricing }`. The price is **recalculated on the server**; any price sent by the browser is ignored. |
 
@@ -30,7 +30,7 @@ All bodies are JSON unless marked *multipart*. Errors look like `{ "error": "mes
 | PATCH | `/api/admin/orders/:id/status` | `{ status }` | Pending, Design Review, In Production, Shipped, Delivered, Cancelled. `Payment Confirmed` is refused: only a verified payment webhook may set it. |
 | GET | `/api/admin/artwork/:file` | | Download a customer's uploaded design |
 | GET | `/api/admin/customers` | | Grouped by mobile number |
-| GET / PUT | `/api/admin/rates` | `{ rate22, rate24, making, personalization, tax, shipping }` | |
+| GET / PUT | `/api/admin/rates` | `{ rate22, rate24, making, tax, shipping }` | |
 
 ## Product status meaning
 `pending` = hidden draft, `fulfilled` = live and orderable, `unfulfilled` = shown as "Coming soon" (not orderable).

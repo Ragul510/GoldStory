@@ -44,7 +44,7 @@ for (const p of PRODUCTS) {
 }
 
 // DEMO rates so estimates show up. These are NOT real market prices: set your own in Admin > Edit rates.
-db.prepare("update rates set rate22=6000, rate24=6500, making=10, personalization=500, tax=3, shipping=100, updated_at=datetime('now') where id=1").run();
+db.prepare("update rates set rate22=6000, rate24=6500, making=10, tax=3, shipping=100, updated_at=datetime('now') where id=1").run();
 
 const ORDERS = [
   ['gold-bracelet', '22K', 'Aarav', 'Script', 'Demo Customer A', '9000000001', 'Demo address A, 1 Demo Street, Chennai 600001', 'Pending', 0],

@@ -4,7 +4,7 @@
 //   GET   /api/admin/artwork/:file       download a customer's uploaded design
 //   GET   /api/admin/customers           grouped by mobile number
 //   GET   /api/admin/rates
-//   PUT   /api/admin/rates               { rate22, rate24, making, personalization, tax, shipping }
+//   PUT   /api/admin/rates               { rate22, rate24, making, tax, shipping }
 import { Router } from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,7 +32,7 @@ r.get('/customers', (_req, res) => res.json(db.prepare(`select json_extract(cust
 r.get('/rates', (_req, res) => res.json(getRates()));
 r.put('/rates', (req, res) => {
   const p = rateSchema.safeParse(Object.fromEntries(Object.entries(req.body || {}).map(([k, v]) => [k, Number(v)]))); if (!p.success) return res.status(400).json({ error: 'Invalid rates' });
-  const d = p.data; db.prepare("update rates set rate22=?,rate24=?,making=?,personalization=?,tax=?,shipping=?,updated_at=datetime('now') where id=1").run(d.rate22, d.rate24, d.making, d.personalization, d.tax, d.shipping);
+  const d = p.data; db.prepare("update rates set rate22=?,rate24=?,making=?,tax=?,shipping=?,updated_at=datetime('now') where id=1").run(d.rate22, d.rate24, d.making, d.tax, d.shipping);
   res.json(getRates());
 });
 export default r;
