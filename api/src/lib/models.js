@@ -1,3 +1,21 @@
+// api/src/lib/models.js
+
+// Product order statuses
+export const PRODUCT_STATUSES = [
+    'pending',
+    'fulfilled',
+    'unfulfilled'
+];
+
+// Allowed engraving fonts
+export const FONTS = [
+    'Classic',
+    'Modern',
+    'Script',
+    'Elegant'
+];
+
+// Parse database product row into API response
 export const parseProduct = (r) => {
     if (!r) return null;
 
