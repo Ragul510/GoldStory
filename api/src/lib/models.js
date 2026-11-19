@@ -1,43 +1,75 @@
-// api/src/lib/models.js
-
 import { db } from '../db.js';
 
-// --------------------------------------------------
-// PRODUCT STATUSES
-// --------------------------------------------------
+/* =========================================
+   PRODUCT CONSTANTS
+========================================= */
 
 export const PRODUCT_STATUSES = [
     'pending',
     'fulfilled',
-    'unfulfilled'
+    'unfulfilled',
 ];
-
-// --------------------------------------------------
-// ENGRAVING FONTS
-// --------------------------------------------------
 
 export const FONTS = [
     'Classic',
     'Modern',
     'Script',
-    'Elegant'
+    'Elegant',
 ];
 
-// --------------------------------------------------
-// RAW PRODUCT DATABASE QUERY
-// --------------------------------------------------
+/* =========================================
+   ORDER CONSTANTS
+========================================= */
 
-export const rawProduct = (where, value) => {
+export const ORDER_STATUSES = [
+    'Pending',
+    'Processing',
+    'Completed',
+    'Cancelled',
+    'Payment Confirmed',
+];
+
+/* =========================================
+   JSON HELPER
+========================================= */
+
+function safeJSON(value, fallback = []) {
+    if (!value) return fallback;
+
+    try {
+        return JSON.parse(value);
+    } catch {
+        return fallback;
+    }
+}
+
+/* =========================================
+   PRODUCT DATABASE HELPERS
+========================================= */
+
+/**
+ * Fetch a product using a WHERE condition.
+ *
+ * Examples:
+ * rawProduct('id = ?', id)
+ * rawProduct('slug = ?', slug)
+ */
+export function rawProduct(where, value) {
     return db
         .prepare(`SELECT * FROM products WHERE ${where}`)
         .get(value);
-};
+}
 
-// --------------------------------------------------
-// UNIQUE PRODUCT SLUG GENERATOR
-// --------------------------------------------------
-
-export const uniqueSlug = (name, currentId = null) => {
+/**
+ * Generate a unique product slug.
+ *
+ * Example:
+ * Custom Ring
+ * -> custom-ring
+ * -> custom-ring-2
+ * -> custom-ring-3
+ */
+export function uniqueSlug(name, currentId = null) {
     const base = String(name)
         .trim()
         .toLowerCase()
@@ -54,12 +86,12 @@ export const uniqueSlug = (name, currentId = null) => {
             .prepare('SELECT id FROM products WHERE slug = ?')
             .get(slug);
 
-        // Slug is available
+        // Slug does not exist
         if (!existing) {
             return slug;
         }
 
-        // Existing slug belongs to the same product being updated
+        // Editing the same product: retain its slug
         if (
             currentId !== null &&
             String(existing.id) === String(currentId)
@@ -67,65 +99,114 @@ export const uniqueSlug = (name, currentId = null) => {
             return slug;
         }
 
-        // Generate a new slug
+        // Generate another unique slug
         slug = `${base}-${counter}`;
         counter++;
     }
-};
+}
 
-// --------------------------------------------------
-// GOLD RATES
-// --------------------------------------------------
+/* =========================================
+   PRODUCT PARSER
+========================================= */
 
-export const getRates = () => {
+/**
+ * Convert database product row into API product object.
+ */
+export function parseProduct(row) {
+    if (!row) return null;
+
+    const images = safeJSON(row.images, []);
+
+    return {
+        id: row.id,
+        slug: row.slug,
+        name: row.name,
+        type: row.type,
+        description: row.description,
+
+        purities: safeJSON(row.purities, []),
+
+        weightG: row.weight_g,
+        maxChars: row.max_chars,
+
+        status: row.status,
+        isNew: Boolean(row.is_new),
+        engrave: Boolean(row.engrave),
+
+        images: images.map((file) => {
+            if (!file) return null;
+
+            // ImageKit URL
+            if (
+                typeof file === 'string' &&
+                /^https?:\/\//i.test(file)
+            ) {
+                return file;
+            }
+
+            // Legacy local image
+            return `/uploads/products/${file}`;
+        }).filter(Boolean),
+
+        video: row.video
+            ? (
+                /^https?:\/\//i.test(row.video)
+                    ? row.video
+                    : `/uploads/products/${row.video}`
+            )
+            : null,
+
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+    };
+}
+
+/* =========================================
+   RATE HELPERS
+========================================= */
+
+/**
+ * Get current gold pricing and settings.
+ */
+export function getRates() {
     return db
         .prepare('SELECT * FROM rates WHERE id = 1')
         .get();
-};
+}
 
-// --------------------------------------------------
-// PARSE PRODUCT
-// --------------------------------------------------
+/* =========================================
+   ORDER PARSER
+========================================= */
 
-export const parseProduct = (r) => {
-    if (!r) return null;
-
-    const images = JSON.parse(r.images || '[]');
+/**
+ * Convert database order row into API order object.
+ */
+export function parseOrder(row) {
+    if (!row) return null;
 
     return {
-        id: r.id,
-        slug: r.slug,
-        name: r.name,
-        type: r.type,
-        description: r.description,
+        id: row.id,
 
-        purities: JSON.parse(r.purities || '[]'),
+        productId: row.product_id,
+        productName: row.product_name,
 
-        weightG: r.weight_g,
-        maxChars: r.max_chars,
+        purity: row.purity,
+        engravingText: row.engraving_text,
+        font: row.font,
 
-        status: r.status,
-        isNew: !!r.is_new,
+        artworkFile: row.artwork_file,
 
-        engrave: JSON.parse(r.engrave || '{}'),
+        weightG: row.weight_g,
+        rateUsed: row.rate_used,
 
-        // ImageKit URLs are used directly.
-        // Old local filenames remain supported.
-        images: images.map((f) =>
-            f.startsWith('http')
-                ? f
-                : `/uploads/products/${f}`
-        ),
+        pricing: safeJSON(row.pricing, {}),
+        customer: safeJSON(row.customer, {}),
 
-        // ImageKit video URLs are used directly.
-        // Old local video filenames remain supported.
-        video: r.video
-            ? r.video.startsWith('http')
-                ? r.video
-                : `/uploads/products/${r.video}`
-            : null,
+        paymentStatus: row.payment_status,
+        paymentRef: row.payment_ref,
 
-        createdAt: r.created_at,
-        updatedAt: r.updated_at,
+        status: row.status,
+
+        createdAt: row.created_at,
     };
-};
+}
