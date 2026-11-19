@@ -1,6 +1,8 @@
 // api/src/lib/models.js
 
-// Product order statuses
+import { db } from '../db.js';
+
+// Allowed product statuses
 export const PRODUCT_STATUSES = [
     'pending',
     'fulfilled',
@@ -15,11 +17,21 @@ export const FONTS = [
     'Elegant'
 ];
 
-// Parse database product row into API response
+// Get raw product database row
+export const rawProduct = (where, value) => {
+    return db.prepare(`SELECT * FROM products WHERE ${where}`).get(value);
+};
+
+// Get current gold rates and pricing settings
+export const getRates = () => {
+    return db.prepare('SELECT * FROM rates WHERE id = 1').get();
+};
+
+// Convert database product row into API response
 export const parseProduct = (r) => {
     if (!r) return null;
 
-    const images = JSON.parse(r.images);
+    const images = JSON.parse(r.images || '[]');
 
     return {
         id: r.id,
@@ -27,12 +39,12 @@ export const parseProduct = (r) => {
         name: r.name,
         type: r.type,
         description: r.description,
-        purities: JSON.parse(r.purities),
+        purities: JSON.parse(r.purities || '[]'),
         weightG: r.weight_g,
         maxChars: r.max_chars,
         status: r.status,
         isNew: !!r.is_new,
-        engrave: JSON.parse(r.engrave),
+        engrave: JSON.parse(r.engrave || '{}'),
 
         // ImageKit URLs are used directly.
         // Old local filenames remain supported.
