@@ -1,8 +1,8 @@
 import { db } from '../db.js';
 
-/* =========================================
+/* =========================================================
    PRODUCT CONSTANTS
-========================================= */
+========================================================= */
 
 export const PRODUCT_STATUSES = [
     'pending',
@@ -10,6 +10,7 @@ export const PRODUCT_STATUSES = [
     'unfulfilled',
 ];
 
+/* Keep these font names consistent with the frontend */
 export const FONTS = [
     'Classic',
     'Modern',
@@ -17,9 +18,9 @@ export const FONTS = [
     'Elegant',
 ];
 
-/* =========================================
+/* =========================================================
    ORDER CONSTANTS
-========================================= */
+========================================================= */
 
 export const ORDER_STATUSES = [
     'Pending',
@@ -29,35 +30,21 @@ export const ORDER_STATUSES = [
     'Payment Confirmed',
 ];
 
-/* =========================================
-   JSON HELPER
-========================================= */
-
-function safeJSON(value, fallback = []) {
-    if (!value) return fallback;
-
-    try {
-        return JSON.parse(value);
-    } catch {
-        return fallback;
-    }
-}
-
-/* =========================================
-   PRODUCT DATABASE HELPERS
-========================================= */
+/* =========================================================
+   DATABASE HELPERS
+========================================================= */
 
 /**
- * Fetch a product using a WHERE condition.
+ * Fetch a raw product from the database.
  *
- * Examples:
- * rawProduct('id = ?', id)
+ * Example:
+ * rawProduct('id = ?', productId)
  * rawProduct('slug = ?', slug)
  */
 export function rawProduct(where, value) {
-    return db
-        .prepare(`SELECT * FROM products WHERE ${where}`)
-        .get(value);
+    return db.prepare(
+        `SELECT * FROM products WHERE ${where}`
+    ).get(value);
 }
 
 /**
@@ -65,12 +52,12 @@ export function rawProduct(where, value) {
  *
  * Example:
  * Custom Ring
- * -> custom-ring
- * -> custom-ring-2
- * -> custom-ring-3
+ * custom-ring
+ * custom-ring-2
+ * custom-ring-3
  */
 export function uniqueSlug(name, currentId = null) {
-    const base = String(name)
+    const base = String(name || 'product')
         .trim()
         .toLowerCase()
         .normalize('NFD')
@@ -82,16 +69,15 @@ export function uniqueSlug(name, currentId = null) {
     let counter = 2;
 
     while (true) {
-        const existing = db
-            .prepare('SELECT id FROM products WHERE slug = ?')
-            .get(slug);
+        const existing = db.prepare(
+            'SELECT id FROM products WHERE slug = ?'
+        ).get(slug);
 
-        // Slug does not exist
         if (!existing) {
             return slug;
         }
 
-        // Editing the same product: retain its slug
+        // Allow the existing product to retain its own slug
         if (
             currentId !== null &&
             String(existing.id) === String(currentId)
@@ -99,23 +85,89 @@ export function uniqueSlug(name, currentId = null) {
             return slug;
         }
 
-        // Generate another unique slug
         slug = `${base}-${counter}`;
         counter++;
     }
 }
 
-/* =========================================
-   PRODUCT PARSER
-========================================= */
+/* =========================================================
+   GOLD RATES
+========================================================= */
 
 /**
- * Convert database product row into API product object.
+ * Get current rates from the database.
+ *
+ * Database table:
+ * rates
+ *
+ * Columns:
+ * rate24
+ * rate22
+ * rate18
+ * making
+ * tax
+ * shipping
+ * updated_at
+ */
+export function getRates() {
+    return db.prepare(
+        'SELECT * FROM rates WHERE id = 1'
+    ).get();
+}
+
+/* =========================================================
+   PRODUCT PARSER
+========================================================= */
+
+/**
+ * Convert database product data into API-friendly data.
  */
 export function parseProduct(row) {
     if (!row) return null;
 
-    const images = safeJSON(row.images, []);
+    let images = [];
+
+    try {
+        images = JSON.parse(row.images || '[]');
+    } catch {
+        images = [];
+    }
+
+    // Convert old local file paths to public URLs.
+    // ImageKit URLs are kept unchanged.
+    images = images.map((image) => {
+        if (!image) return image;
+
+        if (
+            image.startsWith('http://') ||
+            image.startsWith('https://')
+        ) {
+            return image;
+        }
+
+        return `/uploads/products/${image}`;
+    });
+
+    let video = null;
+
+    if (row.video) {
+        if (
+            row.video.startsWith('http://') ||
+            row.video.startsWith('https://')
+        ) {
+            video = row.video;
+        } else {
+            video = `/uploads/products/${row.video}`;
+        }
+    }
+
+    let purities = [];
+
+    try {
+        purities = JSON.parse(row.purities || '[]');
+    } catch {
+        purities = [];
+    }
 
     return {
         id: row.id,
@@ -124,7 +176,7 @@ export function parseProduct(row) {
         type: row.type,
         description: row.description,
 
-        purities: safeJSON(row.purities, []),
+        purities,
 
         weightG: row.weight_g,
         maxChars: row.max_chars,
@@ -133,56 +185,38 @@ export function parseProduct(row) {
         isNew: Boolean(row.is_new),
         engrave: Boolean(row.engrave),
 
-        images: images.map((file) => {
-            if (!file) return null;
-
-            // ImageKit URL
-            if (
-                typeof file === 'string' &&
-                /^https?:\/\//i.test(file)
-            ) {
-                return file;
-            }
-
-            // Legacy local image
-            return `/uploads/products/${file}`;
-        }).filter(Boolean),
-
-        video: row.video
-            ? (
-                /^https?:\/\//i.test(row.video)
-                    ? row.video
-                    : `/uploads/products/${row.video}`
-            )
-            : null,
+        images,
+        video,
 
         createdAt: row.created_at,
         updatedAt: row.updated_at,
     };
 }
 
-/* =========================================
-   RATE HELPERS
-========================================= */
-
-/**
- * Get current gold pricing and settings.
- */
-export function getRates() {
-    return db
-        .prepare('SELECT * FROM rates WHERE id = 1')
-        .get();
-}
-
-/* =========================================
+/* =========================================================
    ORDER PARSER
-========================================= */
+========================================================= */
 
 /**
- * Convert database order row into API order object.
+ * Convert database order data into API-friendly data.
  */
 export function parseOrder(row) {
     if (!row) return null;
+
+    let pricing = {};
+    let customer = {};
+
+    try {
+        pricing = JSON.parse(row.pricing || '{}');
+    } catch {
+        pricing = {};
+    }
+
+    try {
+        customer = JSON.parse(row.customer || '{}');
+    } catch {
+        customer = {};
+    }
 
     return {
         id: row.id,
@@ -199,8 +233,8 @@ export function parseOrder(row) {
         weightG: row.weight_g,
         rateUsed: row.rate_used,
 
-        pricing: safeJSON(row.pricing, {}),
-        customer: safeJSON(row.customer, {}),
+        pricing,
+        customer,
 
         paymentStatus: row.payment_status,
         paymentRef: row.payment_ref,

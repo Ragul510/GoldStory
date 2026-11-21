@@ -147,7 +147,6 @@ export default function Studio({ products }) {
               <tr><td>Estimated weight</td><td>{quote.weight} g</td></tr>
               <tr><td>{purity} gold @ {inr(quote.rate)}/g</td><td>{inr(quote.gold)}</td></tr>
               <tr><td>Making</td><td>{inr(quote.making)}</td></tr>
-              <tr><td>Personalization</td><td>{inr(quote.personalization)}</td></tr>
               <tr><td>Tax</td><td>{inr(quote.tax)}</td></tr>
               <tr><td>Shipping</td><td>{inr(quote.shipping)}</td></tr>
               <tr className="tot"><td>Estimated total</td><td>{inr(quote.total)}</td></tr>

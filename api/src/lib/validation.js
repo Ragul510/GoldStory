@@ -5,7 +5,7 @@ export const productSchema = z.object({
   name: z.string().trim().min(2).max(80),
   type: z.string().trim().min(2).max(30),
   description: z.string().trim().max(1000).default(''),
-  purities: z.array(z.enum(['22K', '24K'])).min(1),
+   purities: z.array(z.enum(['24K', '22K', '18K'])).min(1),
   weight_g: z.number().min(0.1).max(500),
   max_chars: z.number().int().min(1).max(40),
   status: z.enum(PRODUCT_STATUSES),
@@ -22,9 +22,9 @@ export const bodyToProduct = (b) => productSchema.parse({
 });
 export const zodMessage = (e) => (e instanceof z.ZodError ? e.issues.map((i) => i.path.join('.') + ': ' + i.message).join('; ') : e.message);
 
-export const quoteSchema = z.object({ slug: z.string().max(80), purity: z.enum(['22K', '24K']), engraving: z.boolean().default(true) });
+export const quoteSchema = z.object({ slug: z.string().max(80), purity: z.enum(['24K', '22K', '18K']), engraving: z.boolean().default(true) });
 export const orderSchema = z.object({
-  slug: z.string().max(80), purity: z.enum(['22K', '24K']),
+  slug: z.string().max(80), purity: z.enum(['24K', '22K', '18K']),
   text: z.string().trim().max(40).optional().default(''), font: z.enum(FONTS).default('Classic'),
   artworkFile: z.string().regex(/^[0-9a-f-]{36}\.(png|jpg|webp)$/).optional(),
   customer: z.object({
@@ -32,4 +32,11 @@ export const orderSchema = z.object({
     email: z.string().email().max(120).optional().or(z.literal('')), address: z.string().trim().min(10).max(400),
   }),
 });
-export const rateSchema = z.object({ rate22: z.number().min(0), rate24: z.number().min(0), making: z.number().min(0).max(100), personalization: z.number().min(0), tax: z.number().min(0).max(100), shipping: z.number().min(0) });
+export const rateSchema = z.object({
+    rate24: z.number().min(0),
+    rate22: z.number().min(0),
+    rate18: z.number().min(0),
+    making: z.number().min(0).max(100),
+    tax: z.number().min(0).max(100),
+    shipping: z.number().min(0),
+});

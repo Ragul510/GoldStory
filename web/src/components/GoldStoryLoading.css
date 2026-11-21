@@ -1,0 +1,120 @@
+
+.gs-api-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 250, 238, 0.30);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: gsLoadingFadeIn 0.25s ease forwards;
+}
+
+.gs-api-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    text-align: center;
+}
+
+.gs-api-loading-coin {
+    width: 115px;
+    height: 115px;
+    animation: gsLoadingRotate 14s linear infinite;
+    filter: drop-shadow(0 8px 18px rgba(154, 106, 6, 0.22));
+}
+
+.gs-api-loading-logo {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.gs-api-loading-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.gs-api-loading-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #5a3c00;
+}
+
+.gs-api-loading-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #806b45;
+}
+
+.gs-api-loading-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+    .gs-api-loading-dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #d9a021;
+        animation: gsLoadingPulse 1.2s ease-in-out infinite;
+    }
+
+        .gs-api-loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .gs-api-loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+@keyframes gsLoadingRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes gsLoadingPulse {
+    0%, 80%, 100% {
+        opacity: 0.3;
+        transform: scale(0.7);
+    }
+
+    40% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gsLoadingFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gs-api-loading-coin,
+    .gs-api-loading-dots span {
+        animation: none;
+    }
+}

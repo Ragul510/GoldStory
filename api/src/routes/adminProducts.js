@@ -407,4 +407,106 @@ r.delete('/:id', (req, res) => {
     });
 });
 
+
+
+// ==================================================
+// ADMIN RATES
+// ==================================================
+
+r.get('/rates', (_req, res) => {
+    try {
+        const rates = getRates();
+
+        if (!rates) {
+            return res.status(500).json({
+                error: 'Rates not found',
+            });
+        }
+
+        res.json({
+            rate24: rates.rate24,
+            rate22: rates.rate22,
+            rate18: rates.rate18,
+            making: rates.making,
+            tax: rates.tax,
+            shipping: rates.shipping,
+        });
+    } catch (error) {
+        console.error('Get rates error:', error);
+
+        res.status(500).json({
+            error: 'Failed to fetch rates',
+        });
+    }
+});
+
+r.put('/rates', (req, res) => {
+    try {
+        const body = req.body || {};
+
+        const normalized = {
+            rate24: Number(body.rate24),
+            rate22: Number(body.rate22),
+            rate18: Number(body.rate18),
+            making: Number(body.making),
+            tax: Number(body.tax),
+            shipping: Number(body.shipping),
+        };
+
+        const parsed = rateSchema.safeParse(normalized);
+
+        if (!parsed.success) {
+            console.error(
+                'Rate validation error:',
+                parsed.error.flatten()
+            );
+
+            return res.status(400).json({
+                error: 'Invalid rates',
+                details: parsed.error.flatten(),
+            });
+        }
+
+        const d = parsed.data;
+
+        db.prepare(`
+      UPDATE rates
+      SET
+        rate24 = ?,
+        rate22 = ?,
+        rate18 = ?,
+        making = ?,
+        tax = ?,
+        shipping = ?,
+        updated_at = datetime('now')
+      WHERE id = 1
+    `).run(
+            d.rate24,
+            d.rate22,
+            d.rate18,
+            d.making,
+            d.tax,
+            d.shipping
+        );
+
+        res.json({
+            rate24: d.rate24,
+            rate22: d.rate22,
+            rate18: d.rate18,
+            making: d.making,
+            tax: d.tax,
+            shipping: d.shipping,
+        });
+
+    } catch (error) {
+        console.error('Save rates error:', error);
+
+        res.status(500).json({
+            error: 'Failed to save rates',
+            details: error.message,
+        });
+    }
+});
+
+
 export default r;

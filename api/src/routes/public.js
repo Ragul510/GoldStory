@@ -28,7 +28,7 @@ r.get('/products/:slug', (req, res) => {
   const p = parseProduct(rawProduct("slug=? and status in ('fulfilled','unfulfilled')", req.params.slug));
   p ? res.json(p) : res.status(404).json({ error: 'Not found' });
 });
-r.get('/rates/public', (_req, res) => { const x = getRates(); res.json({ ready: x.rate22 > 0 || x.rate24 > 0, updatedAt: x.updated_at }); });
+r.get('/rates/public', (_req, res) => { const x = getRates(); res.json({ ready: x.rate24 > 0 || x.rate22 > 0|| x.rate18 > 0, updatedAt: x.updated_at }); });
 
 r.post('/quote', limiter(60 * 1000, 60), (req, res) => {
   const q = quoteSchema.safeParse(req.body); if (!q.success) return res.status(400).json({ error: 'Invalid request' });

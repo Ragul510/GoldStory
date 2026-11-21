@@ -163,8 +163,9 @@ function Customers() {
 }
 
 const RATE_FIELDS = [
-    ['rate22', '22K rate (₹/g)'],
     ['rate24', '24K rate (₹/g)'],
+    ['rate22', '22K rate (₹/g)'],
+    ['rate18', '18K rate (₹/g)'],
     ['making', 'Making charge %'],
     ['tax', 'Tax %'],
     ['shipping', 'Shipping ₹']

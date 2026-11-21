@@ -30,7 +30,7 @@ All bodies are JSON unless marked *multipart*. Errors look like `{ "error": "mes
 | PATCH | `/api/admin/orders/:id/status` | `{ status }` | Pending, Design Review, In Production, Shipped, Delivered, Cancelled. `Payment Confirmed` is refused: only a verified payment webhook may set it. |
 | GET | `/api/admin/artwork/:file` | | Download a customer's uploaded design |
 | GET | `/api/admin/customers` | | Grouped by mobile number |
-| GET / PUT | `/api/admin/rates` | `{ rate22, rate24, making, tax, shipping }` | |
+| GET / PUT | `/api/admin/rates` | `{ rate24, rate22, rate18, making, tax, shipping }` | |
 
 ## Product status meaning
 `pending` = hidden draft, `fulfilled` = live and orderable, `unfulfilled` = shown as "Coming soon" (not orderable).
