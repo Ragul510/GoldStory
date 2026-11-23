@@ -1,0 +1,233 @@
+.h3d {
+    position: relative;
+    height: 500vh;
+    height: 500svh;
+    background: radial-gradient(120% 90% at 70% 30%,#241709 0%,#0b0907 60%);
+    color: #f4ecdc;
+    color-scheme: dark
+}
+
+.h3d-stick {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden
+}
+
+.h3d-cv {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block
+}
+
+.h3d-p {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 6vw;
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity,transform
+}
+
+    .h3d-p.top {
+        justify-content: flex-start;
+        padding-top: 22vh
+    }
+
+    .h3d-p.bot {
+        justify-content: flex-end;
+        padding-bottom: 12vh
+    }
+
+    .h3d-p.mid {
+        align-items: center;
+        text-align: center
+    }
+
+    .h3d-p.left > div {
+        max-width: 520px
+    }
+
+.h3d-k {
+    font-size: 12px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: #d8b46a;
+    margin: 0 0 16px
+}
+
+.h3d h1, .h3d h2 {
+    font-family: var(--font-display,'Instrument Serif','Cormorant Garamond',Georgia,serif);
+    font-weight: 500;
+    line-height: 1.05;
+    margin: 0 0 18px;
+    color: #f4ecdc
+}
+
+.h3d h1 {
+    font-size: clamp(40px,6.2vw,84px)
+}
+
+.h3d h2 {
+    font-size: clamp(32px,4.6vw,60px)
+}
+
+.h3d em {
+    color: #f1d48f;
+    font-style: italic
+}
+
+.h3d-t {
+    font-size: clamp(15px,1.4vw,18px);
+    line-height: 1.7;
+    color: #cfc4ae;
+    margin: 0 0 26px;
+    max-width: 480px
+}
+
+.mid .h3d-t {
+    margin-left: auto;
+    margin-right: auto
+}
+
+.h3d-note {
+    margin: 18px auto 0;
+    min-height: 3.4em
+}
+
+.h3d-orn {
+    display: block;
+    margin: 0 0 20px
+}
+
+.h3d-cta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap
+}
+
+.mid .h3d-cta {
+    justify-content: center
+}
+
+.h3d-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(135deg,#f1d48f,#d8b46a);
+    color: #1a1108;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    border: 1px solid transparent
+}
+
+    .h3d-btn.o {
+        background: none;
+        color: #f4ecdc;
+        border-color: #d8b46a
+    }
+
+.h3d-nm {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #d8b46a;
+    background: rgba(11,9,7,.6);
+    padding: 6px 6px 6px 18px;
+    backdrop-filter: blur(6px)
+}
+
+    .h3d-nm input {
+        background: none;
+        border: 0;
+        outline: 0;
+        color: #f4ecdc;
+        font: 400 18px Georgia,serif;
+        letter-spacing: .12em;
+        width: min(46vw,230px);
+        text-transform: uppercase
+    }
+
+    .h3d-nm span {
+        font-size: 11px;
+        letter-spacing: .2em;
+        color: #d8b46a;
+        text-transform: uppercase;
+        padding-right: 10px
+    }
+
+.h3d-tg {
+    display: inline-flex;
+    border: 1px solid #d8b46a
+}
+
+    .h3d-tg button {
+        background: none;
+        border: 0;
+        color: #f4ecdc;
+        padding: 14px 28px;
+        font: 600 13px system-ui,sans-serif;
+        letter-spacing: .2em;
+        cursor: pointer
+    }
+
+        .h3d-tg button.on {
+            background: linear-gradient(135deg,#f1d48f,#d8b46a);
+            color: #1a1108
+        }
+
+.h3d-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: #d8b46a;
+    transition: opacity .4s;
+    pointer-events: none
+}
+
+    .h3d-hint::after {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 28px;
+        margin: 8px auto 0;
+        background: #d8b46a
+    }
+
+@media(max-width:800px) {
+    .h3d-p.left {
+        align-items: center;
+        text-align: center
+    }
+
+        .h3d-p.left .h3d-orn {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .h3d-p.left .h3d-t {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .h3d-p.left .h3d-cta {
+            justify-content: center
+        }
+
+    .h3d-p.hero {
+        justify-content: flex-end;
+        padding-bottom: 14vh
+    }
+}

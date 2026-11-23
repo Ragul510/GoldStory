@@ -1,0 +1,323 @@
+.hm-wrap {
+    position: relative;
+    margin-top: 34px;
+    --p: 0
+}
+
+.hm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 22px
+}
+/* gold line that draws itself with scroll */
+.hm-line {
+    position: absolute;
+    top: 44px;
+    left: calc((100% - 66px) / 8);
+    right: calc((100% - 66px) / 8);
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(224,168,0,.25)
+}
+
+.hm-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg,#f1d48f,#e0a800);
+    transform: scaleX(var(--p));
+    transform-origin: left center;
+    will-change: transform
+}
+
+.hm-li {
+    position: relative;
+    text-align: center
+}
+
+.hm-node {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid rgba(224,168,0,.35);
+    display: grid;
+    place-items: center;
+    transition: border-color .4s,box-shadow .4s,transform .3s
+}
+
+.hm-li.on .hm-node {
+    border-color: #e0a800;
+    box-shadow: 0 0 0 7px rgba(224,168,0,.16),0 8px 20px rgba(20,40,75,.12)
+}
+
+.hm-num {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #14284b;
+    color: #fff;
+    font: 700 13px/26px system-ui,sans-serif;
+    text-align: center
+}
+
+.hm-body {
+    background: #fff;
+    border: 1px solid rgba(224,168,0,.28);
+    border-radius: 18px;
+    padding: 18px 18px 20px;
+    box-shadow: 0 8px 22px rgba(20,40,75,.08);
+    transition: transform .3s,box-shadow .3s
+}
+
+    .hm-body h3 {
+        margin: 0 0 8px;
+        font-size: 1.05rem;
+        color: #14284b
+    }
+
+    .hm-body p {
+        margin: 0;
+        font-size: .92rem;
+        line-height: 1.55;
+        color: #4a6591
+    }
+
+.hm-cta {
+    text-align: center;
+    margin-top: 40px
+}
+
+/* icons */
+.hm-ic {
+    width: 44px;
+    height: 44px;
+    fill: none;
+    stroke: #14284b;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible
+}
+
+    .hm-ic * {
+        animation-play-state: paused
+    }
+
+.hm-li.on .hm-ic * {
+    animation-play-state: running
+}
+
+.hm-type {
+    stroke: #e0a800;
+    stroke-dasharray: 18;
+    animation: hm-type 2.6s ease-in-out infinite
+}
+
+.hm-cur {
+    fill: #e0a800;
+    stroke: none;
+    animation: hm-curmv 2.6s ease-in-out infinite,hm-bl 1s steps(2) infinite
+}
+
+.hm-trace {
+    stroke: #e0a800;
+    stroke-dasharray: 90;
+    animation: hm-trace 2.6s ease-in-out infinite
+}
+
+.hm-pen {
+    animation: hm-pen 2.6s ease-in-out infinite
+}
+
+.hm-blink {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hm-blink 3.4s infinite
+}
+
+.hm-spark {
+    fill: #e0a800;
+    stroke: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hm-spark 1.8s ease-in-out infinite
+}
+
+@keyframes hm-type {
+    0% {
+        stroke-dashoffset: 18
+    }
+
+    60%,100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@keyframes hm-curmv {
+    0% {
+        transform: translateX(0)
+    }
+
+    60%,100% {
+        transform: translateX(18px)
+    }
+}
+
+@keyframes hm-bl {
+    50% {
+        opacity: 0
+    }
+}
+
+@keyframes hm-trace {
+    0% {
+        stroke-dashoffset: 90
+    }
+
+    65%,100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@keyframes hm-pen {
+    0% {
+        transform: translate(0,0)
+    }
+
+    35% {
+        transform: translate(-5px,4px)
+    }
+
+    70%,100% {
+        transform: translate(0,0)
+    }
+}
+
+@keyframes hm-blink {
+    0%,88%,100% {
+        transform: scaleY(1)
+    }
+
+    94% {
+        transform: scaleY(.12)
+    }
+}
+
+@keyframes hm-spark {
+    0%,100% {
+        transform: scale(.3);
+        opacity: .35
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1
+    }
+}
+
+/* reveal: only hidden once JS is running, so the section still shows without it */
+.hm.ready .hm-li {
+    opacity: 0;
+    transform: translateY(28px)
+}
+
+    .hm.ready .hm-li.on {
+        opacity: 1;
+        transform: none;
+        transition: opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);
+        transition-delay: calc(var(--i) * .05s)
+    }
+
+.hm.ready .hm-num {
+    transform: scale(0)
+}
+
+.hm.ready .hm-li.on .hm-num {
+    transform: scale(1);
+    transition: transform .5s cubic-bezier(.3,1.6,.5,1) .25s
+}
+
+@media(hover:hover) {
+    .hm-li:hover .hm-body {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 32px rgba(20,40,75,.16)
+    }
+
+    .hm-li:hover .hm-node {
+        transform: scale(1.07)
+    }
+}
+
+.hm.done .hm-cta .btn {
+    animation: hm-pulse 2.6s ease-out infinite
+}
+
+@keyframes hm-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(224,168,0,.55)
+    }
+
+    70%,100% {
+        box-shadow: 0 0 0 16px rgba(224,168,0,0)
+    }
+}
+
+/* phones: vertical timeline */
+@media(max-width:820px) {
+    .hm-list {
+        grid-template-columns: 1fr;
+        gap: 26px
+    }
+
+    .hm-line {
+        left: 43px;
+        right: auto;
+        top: 44px;
+        bottom: 44px;
+        width: 3px;
+        height: auto
+    }
+
+    .hm-fill {
+        transform: scaleY(var(--p));
+        transform-origin: center top
+    }
+
+    .hm-li {
+        display: grid;
+        grid-template-columns: 88px 1fr;
+        gap: 16px;
+        align-items: start;
+        text-align: left
+    }
+
+    .hm-node {
+        margin: 0
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .hm * {
+        animation: none !important;
+        transition: none !important
+    }
+
+    .hm.ready .hm-li {
+        opacity: 1;
+        transform: none
+    }
+
+    .hm.ready .hm-num {
+        transform: none
+    }
+}

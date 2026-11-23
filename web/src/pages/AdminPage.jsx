@@ -10,6 +10,7 @@ export default function AdminPage() {
 
     return (
         <div id="p-admin">
+
             <AdminApp />
         </div>
     );

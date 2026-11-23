@@ -1,8 +1,15 @@
 import { Link } from 'react-router-dom';
 import HowItWorks from '../components/HowItWorks';
-import ProductGrid from '../components/ProductGrid';
+//import ProductGrid from '../components/ProductGrid';
 import { media, SITE, useProducts } from '../lib/api';
 import { useSeo } from '../lib/seo';
+import { lazy, Suspense } from 'react';
+import HowAreTheyMade from '../components/HowMade';
+import AboutStory from '../components/AboutStory';
+import TrustBand from '../components/TrustBand';
+import ProductGrid3D from '../components/ProductGrid3D';
+
+const Hero3D = lazy(() => import('../components/Hero3D'));
 
 export default function Home() {
     useSeo({ path: '/', description: 'Design personalized 22K and 24K gold bracelets, rings and coins with your name, initials or logo. Live preview, transparent price estimate, made to order in India.' });
@@ -22,53 +29,20 @@ export function HomeView({ products, loading = false, demo = false }) {
     return (
         <>
       {demo && <div className="demo-banner" role="status">Demo data: the API is not reachable, so you are seeing built-in sample products.</div>}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}/>
-            <div className="frame">
-                <div className="scene">
-                    <div className="hc">
-                        <h1>Your Name. Your Design. Your Gold.</h1>
-                        <svg className="orn" viewBox="0 0 130 16" width="130" height="16" aria-hidden="true">
-                            <path d="M10 8h42M78 8h42" stroke="#f0b400" strokeWidth="2" strokeLinecap="round" />
-                            <path d="M65 2l6 6-6 6-6-6z" fill="#f0b400" />
-                            <path d="M0 8l8-5v10zM130 8l-8-5v10z" fill="#f0b400" />
-                        </svg>
-                        <p>Create personalized 22K and 24K gold jewellery crafted around your identity.</p>
-                        <div className="cta">
-                            <Link className="btn" to="/studio">Customize Now</Link>
-                            <Link className="btn o" to="/#cats">Explore Bracelets &amp; Rings</Link>
-                        </div>
-                    </div>
-                    <div className="hv2">
-                        <div className="tile bk" id="heroArt">
-                            <img src="/images/bracelet.jpg"
-                                alt="Gold curb-link bracelet with engraved name plate"
-                                width={800}
-                                height={800}
-                                fetchPriority="high"
-                                decoding="async"
-                            />
-                        </div>
-                        <div className="tile" id="heroRing">
-                            <img src="/images/coin.jpg"
-                                alt="Personalized gold coin"
-                                width={800}
-                                height={800}
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
+
+            <Suspense fallback={<section style={{ minHeight: '100svh', background: '#0b0907' }} />}>
+                <Hero3D />
+            </Suspense>
 
             <div className="w sec" id="cats">
                 <h2 style={{ textAlign: 'center' }}>Pieces. Endlessly yours.</h2>
-                <ProductGrid products={products} loading={loading} />
+                <ProductGrid3D products={products} loading={loading} />
             </div>
 
       <HowItWorks />
 
-      <section className="w sec mk" id="making">
+      {/*       <section className="w sec mk" id="making">
         <h2 style={{ textAlign: 'center', margin: '0 auto .3em' }}>How Are Custom Rings, Bracelets &amp; Coins Made?</h2>
                 <svg className="orn" viewBox="0 0 130 16" width="130" height="16" aria-hidden="true">
                     <path d="M10 8h42M78 8h42" stroke="#f0b400" strokeWidth="2" strokeLinecap="round" />
@@ -123,6 +97,13 @@ export function HomeView({ products, loading = false, demo = false }) {
                         </div>
                     </div>
                 </div>
-            </section>
-    </>);
+            </section> */}
+
+
+            <section className="w sec mk" id="making"><HowAreTheyMade /></section>
+            <section className="w sec" id="about"><AboutStory /></section>
+            <section className="trust sec" id="shipping"><TrustBand /></section>
+
+        </>
+    );
 }
